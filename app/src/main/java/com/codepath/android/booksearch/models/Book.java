@@ -5,13 +5,21 @@ import android.text.TextUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcel;
 
 import java.util.ArrayList;
 
+@Parcel
 public class Book {
-    private String openLibraryId;
-    private String author;
-    private String title;
+    public String openLibraryId;
+    public String author;
+    public String title;
+
+    public String getPublishYear() {
+        return publishYear;
+    }
+
+    public String publishYear;
 
     public String getOpenLibraryId() {
         return openLibraryId;
@@ -30,6 +38,8 @@ public class Book {
         return "https://covers.openlibrary.org/b/olid/" + openLibraryId + "-L.jpg?default=false";
     }
 
+    public Book() {}
+
     // Returns a Book given the expected JSON
     public static Book fromJson(JSONObject jsonObject) {
         Book book = new Book();
@@ -43,6 +53,7 @@ public class Book {
                 book.openLibraryId = ids.getString(0);
             }
             book.title = jsonObject.has("title_suggest") ? jsonObject.getString("title_suggest") : "";
+            book.publishYear = jsonObject.has("first_publish_year") ? jsonObject.getString("first_publish_year") : "";
             book.author = getAuthor(jsonObject);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -53,7 +64,7 @@ public class Book {
     }
 
     // Return comma separated author list when there is more than one author
-    private static String getAuthor(final JSONObject jsonObject) {
+    public static String getAuthor(final JSONObject jsonObject) {
         try {
             final JSONArray authors = jsonObject.getJSONArray("author_name");
             int numAuthors = authors.length();
